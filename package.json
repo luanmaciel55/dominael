@@ -1,0 +1,1 @@
+{"name":"dominael","version":"1.0.0","private":true,"engines":{"node":">=22"},"dependencies":{"@supabase/supabase-js":"2.116.0"}}
