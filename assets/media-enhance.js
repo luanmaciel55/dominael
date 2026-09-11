@@ -1,0 +1,1 @@
+document.addEventListener('click',e=>{const video=e.target.closest?.('.media-slide video');if(!video)return;const slide=video.closest('.media-slide');if(!slide?.dataset?.url||typeof openLightbox!=='function')return;e.preventDefault();e.stopPropagation();video.pause();openLightbox('video',slide.dataset.url)},true);
