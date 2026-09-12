@@ -1,0 +1,7 @@
+(()=>{
+const C=window.DOMINAEL_CONFIG||{};
+const idFromCard=a=>{try{return new URL(a.href,location.origin).searchParams.get('id')}catch{return null}};
+async function loadFeatured(){const box=document.querySelector('#products'),section=document.querySelector('#featuredSection'),featuredBox=document.querySelector('#featuredProduct');if(!box||!section||!featuredBox)return;try{const r=await fetch(`${C.functionsBase}/public-featured-products`,{headers:{'Content-Type':'application/json'},cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'Erro');const ids=new Set(d.featured_ids||[]);const cards=[...box.querySelectorAll(':scope > a.product')];if(!cards.length&&box.querySelector('.loading'))return;featuredBox.innerHTML='';const featured=[];cards.forEach(card=>{const id=idFromCard(card);if(id&&ids.has(id))featured.push(card)});featured.forEach(card=>{const wrap=document.createElement('div');wrap.className='featured-wrap';wrap.appendChild(card);featuredBox.appendChild(wrap)});box.classList.add('catalog-two-grid');if(featured.length){const h=section.querySelector('h2');if(h)h.textContent=featured.length>1?'Produtos destacados':'Produto destacado';section.classList.remove('hidden')}else section.classList.add('hidden') }catch(e){console.error('Destaques:',e)}}
+function watch(){const box=document.querySelector('#products');if(!box)return;let t;const run=()=>{clearTimeout(t);t=setTimeout(loadFeatured,80)};new MutationObserver(run).observe(box,{childList:true,subtree:false});run()}
+document.addEventListener('DOMContentLoaded',watch);
+})();
