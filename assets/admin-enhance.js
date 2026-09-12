@@ -1,4 +1,6 @@
 import './contribution-admin.js';
+import './course-admin.js';
+if(!document.querySelector('link[href="/assets/courses.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/assets/courses.css';document.head.appendChild(l)}
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2.116.0';
 const C=window.DOMINAEL_CONFIG||{},s=createClient(C.supabaseUrl,C.supabasePublishableKey),$=q=>document.querySelector(q),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format((v||0)/100),dt=v=>v?new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'medium'}).format(new Date(v)):'—';
 async function api(name,opt={}){const{data}=await s.auth.getSession();const r=await fetch(`${C.functionsBase}/${name}`,{...opt,headers:{'Content-Type':'application/json','Authorization':`Bearer ${data.session?.access_token||''}`}}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Erro');return d}
