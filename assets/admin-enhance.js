@@ -1,3 +1,4 @@
+import './admin-pro.js';
 import './contribution-admin.js';
 import './course-admin.js';
 import './creator-profile-admin.js';
