@@ -3,3 +3,4 @@ window.DOMINAEL_CONFIG = {
   supabasePublishableKey: "sb_publishable_ejIeqJWG0QIktJ_kG9hfxw_womJRMwa",
   functionsBase: "https://lzhgwhrlpydwbcglcjrj.supabase.co/functions/v1"
 };
+(()=>{const C=window.DOMINAEL_CONFIG,KEY='ovo_feliz_token';let last=0;async function ping(force=false){const t=sessionStorage.getItem(KEY)||'';if(!t)return;const now=Date.now();if(!force&&now-last<240000)return;last=now;try{await fetch(`${C.functionsBase}/user-activity`,{method:'POST',headers:{'x-egg-token':t},keepalive:true,cache:'no-store'})}catch{}}document.addEventListener('DOMContentLoaded',()=>ping(true));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')ping()});window.addEventListener('focus',()=>ping());setInterval(()=>{if(document.visibilityState==='visible')ping()},300000)})();
