@@ -1,0 +1,1 @@
+export async function saveSolo(s:any,u:any,st:any){return s.from('reinos_solo_states').upsert({user_id:u.id,state:st,updated_at:new Date().toISOString()},{onConflict:'user_id'})}
