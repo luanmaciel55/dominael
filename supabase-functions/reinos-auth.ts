@@ -1,0 +1,4 @@
+import{createClient}from'jsr:@supabase/supabase-js@2.116.0';
+const E=new TextEncoder(),hex=(a:ArrayBuffer)=>[...new Uint8Array(a)].map(x=>x.toString(16).padStart(2,'0')).join('');
+export const db=()=>createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false}});
+export async function user(s:any,t:string){if(!t)return null;let h=hex(await crypto.subtle.digest('SHA-256',E.encode(t))),{data:q}=await s.from('egg_sessions').select('user_id,expires_at').eq('token_hash',h).maybeSingle();if(!q||new Date(q.expires_at)<=new Date())return null;let{data:u}=await s.from('egg_users').select('id,username').eq('id',q.user_id).single();return u}
