@@ -23,6 +23,41 @@ window.DOMINAEL_CONFIG = {
   });
 })();
 
+(function standardizeAuthFields() {
+  document.addEventListener('DOMContentLoaded', function () {
+    const configs = [
+      { mode: '#gamesAuthMode', input: '#gamesUser', email: '#gamesEmail', loginTab: '#gamesLoginTab', registerTab: '#gamesRegisterTab' },
+      { mode: '#courseAuthMode', input: '#courseUsername', email: '#courseEmail', loginTab: '#courseTabLogin', registerTab: '#courseTabRegister' },
+      { mode: '#genAuthMode', input: '#genLogin', email: '#genEmail', loginTab: '[data-mode="login"]', registerTab: '[data-mode="register"]' }
+    ];
+
+    function apply(c) {
+      const modeEl = document.querySelector(c.mode);
+      const input = document.querySelector(c.input);
+      if (!modeEl || !input) return;
+      const label = input.closest('.field')?.querySelector('label');
+      const email = document.querySelector(c.email);
+      const isRegister = modeEl.value === 'register';
+
+      if (label) label.textContent = isRegister ? 'Nome de Usuário' : 'Usuário ou E-mail';
+      input.placeholder = isRegister ? 'Escolha seu nome de usuário' : 'Digite seu usuário ou e-mail';
+      input.autocomplete = 'username';
+      if (email) {
+        email.placeholder = 'Digite seu e-mail';
+        email.autocomplete = 'email';
+      }
+    }
+
+    configs.forEach(function (c) {
+      apply(c);
+      const login = document.querySelector(c.loginTab);
+      const register = document.querySelector(c.registerTab);
+      if (login) login.addEventListener('click', function () { setTimeout(function () { apply(c); }, 0); });
+      if (register) register.addEventListener('click', function () { setTimeout(function () { apply(c); }, 0); });
+    });
+  });
+})();
+
 (function userActivity() {
   const C = window.DOMINAEL_CONFIG;
   const KEY = 'ovo_feliz_token';
