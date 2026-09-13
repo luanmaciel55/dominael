@@ -10,11 +10,13 @@ async function audit(s:any,u:any,action:string){const{error}=await s.from('accou
 async function A(req:Request){const s=S(),t=(req.headers.get('Authorization')||'').replace('Bearer ','');const {data:{user}}=await s.auth.getUser(t);if(!user)throw Error('AUTH');const {data:a}=await s.from('admins').select('user_id').eq('user_id',user.id).maybeSingle();if(!a)throw Error('AUTH');return s}
 const paid=(x:any)=>['paid','approved','completed','confirmed','generated'].includes(String(x?.status||'').toLowerCase())||!!x?.paid_at;
 Deno.serve(async req=>{if(req.method==='OPTIONS')return new Response('ok',{headers:cors});try{const s=await A(req);
-if(req.method==='GET'){const [{data:users},{data:coursePurch},{data:eggPurch},{data:lifePurch},{data:genJobs},{data:courses},{data:eggPackages},{data:eggItems},{data:lifePackages},{data:lifeItems},{data:genTypes}]=await Promise.all([
+if(req.method==='GET'){const [{data:users},{data:coursePurch},{data:eggPurch},{data:lifePurch},{data:genJobs},{data:shopPurch},{data:superPurch},{data:courses},{data:eggPackages},{data:eggItems},{data:lifePackages},{data:lifeItems},{data:genTypes}]=await Promise.all([
 s.from('egg_users').select('id,username,email,full_name,recovery_birth_cipher,recovery_grand_cipher,created_at,last_seen_at').order('created_at',{ascending:false}),
 s.from('course_purchases').select('user_id,course_id,amount_cents,status,paid_at,created_at'),
 s.from('egg_purchases').select('user_id,item_type,item_id,amount_cents,status,paid_at,created_at'),
 s.from('life_purchases').select('user_id,item_type,item_id,amount_cents,status,paid_at,created_at'),
+s.from('shop_purchases').select('user_id,kind,item_id,amount_cents,status,paid_at,created_at'),
+s.from('super_purchases').select('user_id,item_id,amount_cents,status,paid_at,created_at'),
 s.from('generator_jobs').select('user_id,generator_type_id,amount_cents,status,paid_at,created_at'),
 s.from('courses').select('id,title'),s.from('egg_coin_packages').select('id,label'),s.from('egg_gold_items').select('id,name'),s.from('life_coin_packages').select('id,label'),s.from('life_shop_items').select('id,name'),s.from('generator_types').select('id,name')]);
 const cm=new Map((courses||[]).map((x:any)=>[x.id,x.title])),ep=new Map((eggPackages||[]).map((x:any)=>[String(x.id),x.label])),ei=new Map((eggItems||[]).map((x:any)=>[String(x.id),x.name])),lp=new Map((lifePackages||[]).map((x:any)=>[String(x.id),x.label])),li=new Map((lifeItems||[]).map((x:any)=>[String(x.id),x.name])),gm=new Map((genTypes||[]).map((x:any)=>[String(x.id),x.name]));
@@ -22,6 +24,8 @@ const details=new Map<string,any[]>();const add=(uid:string,d:any)=>{if(!uid)ret
 for(const x of coursePurch||[])if(paid(x))add(x.user_id,{area:'Cursos',item:cm.get(x.course_id)||'Curso',amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
 for(const x of eggPurch||[])if(paid(x))add(x.user_id,{area:'Ovo Feliz',item:x.item_type==='coins'?(ep.get(String(x.item_id))||'Pacote de moedas'):(ei.get(String(x.item_id))||String(x.item_id||'Item')),amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
 for(const x of lifePurch||[])if(paid(x))add(x.user_id,{area:'Vida Feliz',item:x.item_type==='coins'?(lp.get(String(x.item_id))||'Pacote de moedas'):(li.get(String(x.item_id))||String(x.item_id||'Item')),amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
+for(const x of shopPurch||[])if(paid(x))add(x.user_id,{area:'Minha Lojinha',item:x.kind||x.item_id||'Compra',amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
+for(const x of superPurch||[])if(paid(x))add(x.user_id,{area:'Super Capacidade',item:x.item_id||'Compra',amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
 for(const x of genJobs||[])if(paid(x))add(x.user_id,{area:'Geradores',item:gm.get(String(x.generator_type_id))||'Gerador',amount_cents:Number(x.amount_cents||0),date:x.paid_at||x.created_at});
 const rows=await Promise.all((users||[]).map(async(u:any)=>{const d=(details.get(u.id)||[]).sort((a,b)=>+new Date(b.date)-+new Date(a.date)),total=d.reduce((n,x)=>n+Number(x.amount_cents||0),0);const {recovery_birth_cipher,recovery_grand_cipher,...safe}=u;return {...safe,recovery_birth:await reveal(recovery_birth_cipher),recovery_grandfather:await reveal(recovery_grand_cipher),total_spent_cents:total,purchases:d,purchase_count:d.length}}));rows.sort((a:any,b:any)=>b.total_spent_cents-a.total_spent_cents||+new Date(b.created_at)-+new Date(a.created_at));
 const {data:logs}=await s.from('account_audit').select('username,actor,action,created_at').order('created_at',{ascending:false}).limit(200);
