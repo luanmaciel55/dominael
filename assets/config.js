@@ -166,7 +166,6 @@ window.DOMINAEL_CONFIG = {
 (function universalPublicNavigationAndPostAlerts() {
   const C = window.DOMINAEL_CONFIG || {};
   const SEEN_KEY = 'dominael_last_seen_post_v1';
-  let latestPostKey = '';
 
   function installStyles() {
     if (document.querySelector('#domUniversalNavStyles')) return;
@@ -174,10 +173,6 @@ window.DOMINAEL_CONFIG = {
     style.id = 'domUniversalNavStyles';
     style.textContent = '.dom-universal-footer{border-top:1px solid #e3e9ef;background:#fff;padding:18px 16px}.dom-universal-footer .duf-in{max-width:1180px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.dom-universal-footer a{position:relative;text-decoration:none}.dom-post-badge{position:absolute;right:-5px;top:-6px;width:11px;height:11px;border-radius:50%;background:#e11d48;border:2px solid #fff;box-shadow:0 0 0 1px rgba(225,29,72,.18);display:none}.dom-has-new-post .dom-post-badge{display:block}.dg-links a[data-dom-post-link]{position:relative}.dg-links a[data-dom-post-link] .dom-post-badge{right:2px;top:2px}@media(min-width:761px){.dg-links a[data-dom-post-link] .dom-post-badge{right:-8px;top:-7px}}';
     document.head.appendChild(style);
-  }
-
-  function postLinkHtml(label, classes) {
-    return '<a class="' + classes + '" href="/postagens.html" data-dom-post-link>📰 ' + label + '<span class="dom-post-badge" aria-label="Nova postagem"></span></a>';
   }
 
   function ensureBadge(link) {
@@ -189,21 +184,34 @@ window.DOMINAEL_CONFIG = {
     }
   }
 
+  function addRequiredButtons(actions) {
+    const defs = [
+      ['/jogos.html','🎮 Jogos'],
+      ['/cursos.html','🎓 Cursos'],
+      ['/geradores.html','🛠 Geradores'],
+      ['/postagens.html','📰 Postagens'],
+      ['/informacoes.html','Informações · Segurança · Privacidade']
+    ];
+    defs.forEach(function (def) {
+      const exists = Array.from(actions.querySelectorAll('a')).some(function (a) {
+        return (a.getAttribute('href') || '').split('?')[0] === def[0];
+      });
+      if (!exists) {
+        const a = document.createElement('a');
+        a.className = 'btn btn-light';
+        a.href = def[0];
+        a.textContent = def[1];
+        actions.appendChild(a);
+      }
+    });
+  }
+
   function ensureUniversalFooter() {
     if (location.pathname.indexOf('admin') !== -1) return;
     installStyles();
-    let footer = document.querySelector('#domUniversalFooterLinks');
-    if (!footer) {
-      footer = document.createElement('div');
-      footer.id = 'domUniversalFooterLinks';
-      footer.className = 'dom-universal-footer';
-      footer.innerHTML = '<div class="duf-in"><a class="btn btn-light" href="/jogos.html">🎮 Jogos</a><a class="btn btn-light" href="/cursos.html">🎓 Cursos</a><a class="btn btn-light" href="/geradores.html">🛠 Geradores</a>' + postLinkHtml('Postagens','btn btn-light') + '<a class="btn btn-light" href="/informacoes.html">Informações · Segurança · Privacidade</a></div>';
-      const praise = document.querySelector('#domPraise');
-      if (praise && praise.parentNode) praise.parentNode.insertBefore(footer, praise);
-      else document.body.appendChild(footer);
-    }
-
-    document.querySelectorAll('footer').forEach(function (existingFooter) {
+    const footers = Array.from(document.querySelectorAll('footer'));
+    if (footers.length) {
+      const existingFooter = footers[footers.length - 1];
       const container = existingFooter.querySelector('.container') || existingFooter;
       let actions = container.querySelector('.course-footer-actions') || container.querySelector('div[style*="flex"]');
       if (!actions) {
@@ -212,27 +220,17 @@ window.DOMINAEL_CONFIG = {
         actions.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap';
         container.appendChild(actions);
       }
-      const defs = [
-        ['/jogos.html','🎮 Jogos'],
-        ['/cursos.html','🎓 Cursos'],
-        ['/geradores.html','🛠 Geradores'],
-        ['/postagens.html','📰 Postagens'],
-        ['/informacoes.html','Informações · Segurança · Privacidade']
-      ];
-      defs.forEach(function (def) {
-        const exists = Array.from(actions.querySelectorAll('a')).some(function (a) {
-          return (a.getAttribute('href') || '').split('?')[0] === def[0];
-        });
-        if (!exists) {
-          const a = document.createElement('a');
-          a.className = 'btn btn-light';
-          a.href = def[0];
-          a.textContent = def[1];
-          if (def[0] === '/postagens.html') a.setAttribute('data-dom-post-link','');
-          actions.appendChild(a);
-        }
-      });
-    });
+      addRequiredButtons(actions);
+    } else if (!document.querySelector('#domUniversalFooterLinks')) {
+      const footer = document.createElement('div');
+      footer.id = 'domUniversalFooterLinks';
+      footer.className = 'dom-universal-footer';
+      footer.innerHTML = '<div class="duf-in"></div>';
+      addRequiredButtons(footer.querySelector('.duf-in'));
+      const praise = document.querySelector('#domPraise');
+      if (praise && praise.parentNode) praise.parentNode.insertBefore(footer, praise);
+      else document.body.appendChild(footer);
+    }
 
     document.querySelectorAll('a[href="/postagens.html"],a[href^="/postagens.html?"]').forEach(function (a) {
       a.setAttribute('data-dom-post-link','');
@@ -257,7 +255,7 @@ window.DOMINAEL_CONFIG = {
       const d = await r.json();
       const p = Array.isArray(d.posts) && d.posts.length ? d.posts[0] : null;
       if (!p) { setAlert(false); return; }
-      latestPostKey = String(p.id || p.slug || '') + '|' + String(p.published_at || p.created_at || '');
+      const latestPostKey = String(p.id || p.slug || '') + '|' + String(p.published_at || p.created_at || '');
       const onPosts = /\/postagens\.html$|\/postagem\.html$/.test(location.pathname);
       if (onPosts) {
         localStorage.setItem(SEEN_KEY, latestPostKey);
