@@ -213,7 +213,9 @@ window.DOMINAEL_CONFIG = {
     if (footers.length) {
       const existingFooter = footers[footers.length - 1];
       const container = existingFooter.querySelector('.container') || existingFooter;
-      let actions = container.querySelector('.course-footer-actions') || container.querySelector('div[style*="flex"]');
+      let actions = container.classList.contains('gen-footer-links')
+        ? container
+        : container.querySelector('.course-footer-actions') || container.querySelector('div[style*="flex"]');
       if (!actions) {
         actions = document.createElement('div');
         actions.className = 'course-footer-actions';
