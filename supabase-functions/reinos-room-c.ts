@@ -1,0 +1,1 @@
+import{newWorld}from'./reinos-data.ts';export async function createRoom(s:any,u:any){let st=newWorld('public',u),q=await s.from('reinos_matches').insert({state:st}).select('id').single();if(q.error)throw q.error;await s.from('reinos_match_players').insert({match_id:q.data.id,user_id:u.id,seat:0});return{st,seat:0,id:q.data.id}}
