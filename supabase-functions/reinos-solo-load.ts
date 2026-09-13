@@ -1,0 +1,1 @@
+import{newWorld}from'./reinos-data.ts';import{tick}from'./reinos-tick.ts';export async function loadSolo(s:any,u:any){let q=await s.from('reinos_solo_states').select('state').eq('user_id',u.id).maybeSingle();let st=q.data?.state||newWorld('solo',u);return tick(st)}
