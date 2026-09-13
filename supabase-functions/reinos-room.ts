@@ -1,0 +1,1 @@
+import{findMine}from'./reinos-room-a.ts';import{joinOpen}from'./reinos-room-b.ts';import{createRoom}from'./reinos-room-c.ts';export async function room(s:any,u:any){return(await findMine(s,u))||(await joinOpen(s,u))||(await createRoom(s,u))}
