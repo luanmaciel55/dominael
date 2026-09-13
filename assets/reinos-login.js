@@ -1,0 +1,1 @@
+const C=window.DOMINAEL_CONFIG||{};export async function loginGame(username,password){let r=await fetch(`${C.functionsBase}/egg-auth`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',username,password})}),d=await r.json();if(!r.ok)throw Error(d.error||'Não foi possível entrar.');return d}
