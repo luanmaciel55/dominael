@@ -1,0 +1,1 @@
+import{rank}from'./reinos-economy.js';export function news(el,s){el.innerHTML='<h3>Notícias</h3>'+s.news.slice(0,8).map(n=>`<div>${n.text}</div>`).join('')}export function rankingHtml(s){return rank(s).map(x=>`<div class="rm-rank"><b>${x.rank}º</b><span>${x.name}</span><strong>${x.score}</strong></div>`).join('')}
