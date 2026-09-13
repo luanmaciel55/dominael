@@ -1,0 +1,1 @@
+const K='reinos_online_session';export const getOnlineSession=()=>sessionStorage.getItem(K)||'';export const setOnlineSession=v=>sessionStorage.setItem(K,v);export const clearOnlineSession=()=>sessionStorage.removeItem(K);
