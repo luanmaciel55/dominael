@@ -190,6 +190,7 @@ window.DOMINAEL_CONFIG = {
       ['/cursos.html','🎓 Cursos'],
       ['/geradores.html','🛠 Geradores'],
       ['/postagens.html','📰 Postagens'],
+      ['/minha-conta.html','👤 Minha conta'],
       ['/informacoes.html','Informações · Segurança · Privacidade']
     ];
     defs.forEach(function (def) {
@@ -275,3 +276,5 @@ window.DOMINAEL_CONFIG = {
     setInterval(checkPosts, 300000);
   });
 })();
+
+(function accountNavigation(){document.addEventListener('DOMContentLoaded',function(){if(location.pathname.includes('admin'))return;const nav=document.querySelector('.gen-top .gen-actions, .course-top .course-nav-actions, .topbar .navlinks, .game-hub-hero .course-footer-actions');if(nav&&!nav.querySelector('a[href="/minha-conta.html"]')){const a=document.createElement('a');a.href='/minha-conta.html';a.className='btn btn-light';a.textContent='Minha conta';nav.appendChild(a)}})})();
