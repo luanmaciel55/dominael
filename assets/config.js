@@ -110,7 +110,7 @@ window.DOMINAEL_CONFIG = {
   const p=location.pathname.toLowerCase();
   let src='';
   if(p==='/produto.html'||p==='/cursos.html')src='/assets/vale-purchase.js?v=20260914-24';
-  else if(['/gerador-livreto.html','/gerador-infantil.html','/gerador-cpe.html','/gerador-curriculo.html'].includes(p))src='/assets/generator-vale.js?v=20260914-31';
+  else if(['/gerador-livreto.html','/gerador-infantil.html','/gerador-cpe.html','/gerador-curriculo.html'].includes(p))src='/assets/generator-vale.js?v=20260914-32';
   else if(['/ovo-feliz.html','/vida-feliz.html','/minha-lojinha.html','/super-capacidade.html'].includes(p))src='/assets/game-vale.js?v=20260914-24';
   if(src&&!document.querySelector(`script[src^="${src.split('?')[0]}"]`)){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}
 })();
