@@ -110,7 +110,7 @@ window.DOMINAEL_CONFIG = {
   const p=location.pathname.toLowerCase();
   let src='';
   if(p==='/produto.html'||p==='/cursos.html')src='/assets/vale-purchase.js?v=20260914-24';
-  else if(p.startsWith('/gerador-')&&p.endsWith('.html'))src='/assets/generator-vale.js?v=20260914-41';
-  else if(['/ovo-feliz.html','/vida-feliz.html','/minha-lojinha.html','/super-capacidade.html','/show-das-perguntas.html','/roleta.html','/fabrica-feliz.html','/jogo-da-compra-e-venda.html','/reinos-mercadores.html'].includes(p))src='/assets/game-vale.js?v=20260914-41';
+  else if(p.startsWith('/gerador-')&&p.endsWith('.html'))src='/assets/generator-vale.js?v=20260914-42';
+  else if(['/ovo-feliz.html','/vida-feliz.html','/minha-lojinha.html','/super-capacidade.html','/show-das-perguntas.html','/roleta.html','/fabrica-feliz.html','/jogo-da-compra-e-venda.html','/reinos-mercadores.html'].includes(p))src='/assets/game-vale.js?v=20260914-42';
   if(src&&!document.querySelector(`script[src^="${src.split('?')[0]}"]`)){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}
 })();
