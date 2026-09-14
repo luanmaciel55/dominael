@@ -1,4 +1,4 @@
-import './admin-preflight.js?v=20260913-3';
+import './admin-preflight.js?v=20260914-1';
 import './admin-pro.js';
 import './admin-course-extra.js';
 import './contribution-admin.js?v=20260913-2';
