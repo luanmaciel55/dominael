@@ -1,7 +1,7 @@
-import './admin-preflight.js';
+import './admin-preflight.js?v=20260913-2';
 import './admin-pro.js';
 import './admin-course-extra.js';
-import './contribution-admin.js';
+import './contribution-admin.js?v=20260913-2';
 import './course-admin.js';
 import './creator-profile-admin.js';
 import './blog-author-admin.js';
