@@ -1,4 +1,5 @@
 import './admin-suite-v2.js';
+import './admin-review-groups.js';
 const $=q=>document.querySelector(q);
 function wrapField(id,label,wrapperId=''){const el=$(id);if(!el)return null;let wrap=el.closest('.field');if(!wrap){wrap=document.createElement('div');wrap.className='field';if(wrapperId)wrap.id=wrapperId;el.parentNode.insertBefore(wrap,el);const lab=document.createElement('label');lab.setAttribute('for',el.id);lab.textContent=label;wrap.appendChild(lab);wrap.appendChild(el)}else{if(wrapperId&&!wrap.id)wrap.id=wrapperId;if(!wrap.querySelector('label')){const lab=document.createElement('label');lab.setAttribute('for',el.id);lab.textContent=label;wrap.insertBefore(lab,el)}}return wrap}
 function ensureCheckboxLabel(id,labelText,labelId=''){const input=$(id);if(!input)return null;let label=input.closest('label');if(!label){label=document.createElement('label');input.parentNode.insertBefore(label,input);label.appendChild(input);label.appendChild(document.createTextNode(' '+labelText))}if(labelId)label.id=labelId;return label}
