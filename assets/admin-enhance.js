@@ -8,6 +8,7 @@ import './blog-author-admin.js';
 import './site-menu-admin.js';
 import './admin-generators.js';
 import './admin-categories.js';
+import './admin-vale-cards.js?v=20260914-1';
 if(!document.querySelector('link[href="/assets/courses.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/assets/courses.css';document.head.appendChild(l)}
 if(!document.querySelector('link[href="/assets/creator-profile-v2.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/assets/creator-profile-v2.css';document.head.appendChild(l)}
 import{createClient}from'https://esm.sh/@supabase/supabase-js@2.116.0';
