@@ -1,3 +1,4 @@
+import './admin-preflight.js';
 import './admin-pro.js';
 import './admin-course-extra.js';
 import './contribution-admin.js';
