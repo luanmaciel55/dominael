@@ -278,3 +278,5 @@ window.DOMINAEL_CONFIG = {
 })();
 
 (function accountNavigation(){document.addEventListener('DOMContentLoaded',function(){if(location.pathname.includes('admin'))return;const nav=document.querySelector('.gen-top .gen-actions, .course-top .course-nav-actions, .topbar .navlinks, .game-hub-hero .course-footer-actions');if(nav&&!nav.querySelector('a[href="/minha-conta.html"]')){const a=document.createElement('a');a.href='/minha-conta.html';a.className='btn btn-light';a.textContent='Minha conta';nav.appendChild(a)}})})();
+
+(function loadGlobalTracking(){if(location.pathname.includes('admin'))return;const s=document.createElement('script');s.src='/assets/global-track.js?v=20260913-1';s.defer=true;document.head.appendChild(s)})();
